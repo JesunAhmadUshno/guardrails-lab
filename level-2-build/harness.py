@@ -35,8 +35,8 @@ ROOT = os.path.dirname(HERE)
 sys.path.insert(0, os.path.join(ROOT, "level-1-learn"))
 sys.path.insert(0, HERE)
 
-from guardrails import check  # noqa: E402  (Learn code, imported)
 from fix import quarantine_fix  # noqa: E402
+from guardrails import check  # noqa: E402  (Learn code, imported)
 from targets import AgentTarget, RagTarget  # noqa: E402
 
 BLOCKED_DOC = "[BLOCKED RETRIEVED TEXT]"
