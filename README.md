@@ -2,7 +2,7 @@
 
 AI safety in production: filters, PII redaction, a jailbreak test set, a policy engine, a red-team track inside the isolated lab only.
 
-Status: Level 1 Learn DONE (2026-11-05, ROADMAP-V3-BATCH). Levels 2 and 3 are scaffold only.
+Status: Level 1 Learn DONE and Level 2 Build DONE (2026-11-05, ROADMAP-V3-BATCH). Level 3 is scaffold only.
 Project: P13. Fleet node: BlackBoxV2. Wave: Wave 5.
 
 ## Start here
@@ -15,7 +15,7 @@ Project: P13. Fleet node: BlackBoxV2. Wave: Wave 5.
 ## Level map
 
 - Level 1, Learn: DONE. Rule-based input and output filters, PII detection and redaction (Luhn-checked cards), and a 30-case hand-built evaluation set (benign, synthetic PII, jailbreak, prompt injection, misuse), stdlib only.
-- Level 2, Build: a real working system other people can run. Not built yet.
+- Level 2, Build: DONE. A 58-case adversarial set (16 jailbreak, 16 prompt injection, 16 misuse, 10 benign) run against two stand-in targets modelled on the P05 RAG and P07 agent patterns (the real repos are not imported), scored in three stages: target alone, Learn guardrails, and guardrails plus a quarantine and data-wrapping fix for the top class, prompt injection.
 - Level 3, Deep: benchmarks, optimization, evaluation, hard cases. Not built yet.
 
 ## Benchmarks
@@ -35,6 +35,28 @@ Measured 2026-11-05, Muse VM, Python 3.12, by level-1-learn/run_learn.py.
 The perfect rates are on a small hand-built set written by the same
 author as the rules. They are not a claim about unseen text. See the
 level README limits and grade (7,700 of 10,000).
+
+## Build results
+
+Measured 2026-11-05, Muse VM, Python 3.12, by
+level-2-build/run_build.py. Bypass rate per class per stage
+(hand-checkable in level-2-build/results_build.json):
+
+| Class | Alone | Guarded | Guarded plus fix |
+| --- | --- | --- | --- |
+| Jailbreak (16) | 1.000 | 0.500 | 0.500 |
+| Prompt injection (16) | 1.000 | 0.750 | 0.000 |
+| Misuse (16) | 1.000 | 0.625 | 0.375 |
+| Benign (10) | 1.000 success | 1.000 success | 1.000 success |
+
+Top class after the guarded stage: prompt injection. The fix
+(quarantine of instruction sentences in retrieved and tool text,
+plus wrapping that text as data the targets do not follow) takes
+it to 0.000 on this set. The targets are stand-ins, not the real
+P05 and P07 systems, and the set is hand-built and synthetic. See
+level-2-build/README.md for method, failure modes, and the grade
+(8,200 of 10,000). Unit tests: 43 passing (20 Learn, 23 Build),
+plus the scaffold smoke test.
 
 ## Novelty
 
