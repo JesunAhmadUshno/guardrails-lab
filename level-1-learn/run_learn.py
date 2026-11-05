@@ -6,7 +6,6 @@ Writes level-1-learn/results_learn.json. No timestamps, no randomness.
 import json
 import os
 import sys
-from collections import defaultdict
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)

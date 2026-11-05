@@ -10,7 +10,7 @@ import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
-from harness import run_all, load_cases  # noqa: E402
+from harness import load_cases, run_all  # noqa: E402
 
 
 def main():
