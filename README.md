@@ -2,7 +2,7 @@
 
 AI safety in production: filters, PII redaction, a jailbreak test set, a policy engine, a red-team track inside the isolated lab only.
 
-Status: Level 1 Learn DONE and Level 2 Build DONE (2026-11-05, ROADMAP-V3-BATCH). Level 3 is scaffold only.
+Status: Level 1 Learn DONE, Level 2 Build DONE, and Level 3 Deep DONE (2026-11-05, ROADMAP-V3-BATCH). v1.0 shipped.
 Project: P13. Fleet node: BlackBoxV2. Wave: Wave 5.
 
 ## Start here
@@ -16,7 +16,7 @@ Project: P13. Fleet node: BlackBoxV2. Wave: Wave 5.
 
 - Level 1, Learn: DONE. Rule-based input and output filters, PII detection and redaction (Luhn-checked cards), and a 30-case hand-built evaluation set (benign, synthetic PII, jailbreak, prompt injection, misuse), stdlib only.
 - Level 2, Build: DONE. A 58-case adversarial set (16 jailbreak, 16 prompt injection, 16 misuse, 10 benign) run against two stand-in targets modelled on the P05 RAG and P07 agent patterns (the real repos are not imported), scored in three stages: target alone, Learn guardrails, and guardrails plus a quarantine and data-wrapping fix for the top class, prompt injection.
-- Level 3, Deep: benchmarks, optimization, evaluation, hard cases. Not built yet.
+- Level 3, Deep: DONE. A small misuse classifier (logistic regression from scratch, stdlib only, text features only) trained on the Learn and Build labelled sets (81 usable cases), with precision, recall, F1, and a confusion matrix published beside the Build bypass table, plus a stratified 5-fold cross-validation summary.
 
 ## Benchmarks
 
@@ -57,6 +57,32 @@ P05 and P07 systems, and the set is hand-built and synthetic. See
 level-2-build/README.md for method, failure modes, and the grade
 (8,200 of 10,000). Unit tests: 43 passing (20 Learn, 23 Build),
 plus the scaffold smoke test.
+
+## Deep results
+
+Measured 2026-11-05, Muse VM, Python 3.12, by
+level-3-deep/run_deep.py. Seeded stratified split (seed 42, test
+fraction 0.25): train 61, held-out test 20 (16 block-worthy,
+4 benign).
+
+| Metric | Held-out value |
+| --- | --- |
+| Precision | 0.889 |
+| Recall | 1.000 |
+| F1 | 0.941 |
+| Accuracy | 0.900 |
+| Confusion (TP, FP, TN, FN) | 16, 2, 2, 0 |
+
+Per class on held-out: jailbreak recall 1.000 (5 of 5), prompt
+injection recall 1.000 (5 of 5), misuse recall 1.000 (6 of 6),
+benign specificity 0.500 (2 of 4: both false positives are benign
+cases discussing jailbreak research). Stratified 5-fold cross
+validation over all 81 cases: precision mean 0.844, recall mean
+0.922, F1 mean 0.879. Data is synthetic and same-author, the
+held-out set is small, and features are text only. See
+level-3-deep/README.md for method, failure modes, and the grade
+(7,800 of 10,000). Unit tests: 53 passing in total (20 Learn,
+23 Build, 10 Deep), plus the scaffold smoke test.
 
 ## Novelty
 
