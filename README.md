@@ -30,7 +30,7 @@ Measured 2026-11-05, Muse VM, Python 3.12, by level-1-learn/run_learn.py.
 | Jailbreak catch rate | 5 of 5, rate 1.000 |
 | Prompt injection catch rate | 5 of 5, rate 1.000 |
 | Misuse catch rate | 5 of 5, rate 1.000 |
-| Unit tests | 20 passing, plus scaffold smoke test |
+| Unit tests (Learn) | 20 passing, plus scaffold smoke test (53 across all levels, see Deep results) |
 
 The perfect rates are on a small hand-built set written by the same
 author as the rules. They are not a claim about unseen text. See the
