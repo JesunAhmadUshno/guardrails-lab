@@ -2,6 +2,10 @@
 
 AI safety in production: filters, PII redaction, a jailbreak test set, a policy engine, a red-team track inside the isolated lab only.
 
+Live dashboard: https://jesunahmadushno.github.io/guardrails-lab/
+
+The dashboard (site/) runs a JavaScript port of the Learn guardrails and a live retrain of the Deep classifier in the browser. `npm run build` fails unless both reproduce the recorded Python results exactly; the red-team table, audit log and cross-validation are recorded replays. Research review: docs/research-review.md.
+
 Status: Level 1 Learn DONE, Level 2 Build DONE, and Level 3 Deep DONE (2026-11-05, ROADMAP-V3-BATCH). v1.0 shipped.
 Project: P13. Fleet node: BlackBoxV2. Wave: Wave 5.
 
