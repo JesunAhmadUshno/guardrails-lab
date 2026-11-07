@@ -2,10 +2,11 @@
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { wilson, sampleSd, paired } from './stats.js';
-import { check } from './guard.js';
+import { createGuard } from './guard.js';
 import { loadDataset, recordedSplit, confusion } from './classifier.js';
 
 const read = (p) => JSON.parse(readFileSync(new URL(`../../${p}`, import.meta.url), 'utf8'));
+const { check } = createGuard(readFileSync(new URL('../../level-1-learn/guardrails.py', import.meta.url), 'utf8'));
 const rigor = read('level-3-deep/results_rigor.json');
 const build = read('level-2-build/results_build.json');
 const deep = read('level-3-deep/results_deep.json');
