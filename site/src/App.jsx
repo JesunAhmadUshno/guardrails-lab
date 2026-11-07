@@ -8,7 +8,8 @@ import rigor from '../../level-3-deep/results_rigor.json';
 import readme1 from '../../level-1-learn/README.md?raw';
 import readme2 from '../../level-2-build/README.md?raw';
 import readme3 from '../../level-3-deep/README.md?raw';
-import { check, BLOCK_AT, luhnOk, POLICY_RULES } from './guard.js';
+import guardPy from '../../level-1-learn/guardrails.py?raw';
+import { createGuard, luhnOk } from './guard.js';
 import { fitRecorded, confusion, prf } from './classifier.js';
 import { wilson, sampleSd, mean, paired } from './stats.js';
 
@@ -23,6 +24,7 @@ const STAGES = [['stage1_alone', 'Stage 1 · target alone', 'var(--muted)'], ['s
 const STAGE_SHORT = { stage1_alone: 'S1 alone', stage2_guarded: 'S2 guarded', stage3_guarded_plus_fix: 'S3 + fix' };
 const CLASSES = ['jailbreak', 'prompt_injection', 'misuse'];
 const LABEL = { jailbreak: 'Jailbreak', prompt_injection: 'Prompt injection', misuse: 'Misuse', benign: 'Benign' };
+const { check, BLOCK_AT, POLICY_RULES } = createGuard(guardPy);
 const caseById = Object.fromEntries(adversarial.map((c) => [c.id, c]));
 const s2 = scores.stage2_guarded, s3 = scores.stage3_guarded_plus_fix;
 
@@ -283,7 +285,7 @@ function Ablation() {
           <thead><tr><th>Class</th><th>Rule pattern</th><th>Weight</th><th>Learn cases lost</th><th>Stage-2 bypasses added</th><th>Stage-3 bypass total</th></tr></thead>
           <tbody>
             {rows.map((r) => (
-              <tr key={r.cls + r.pattern}><td>{LABEL[r.cls]}</td><td className="mono">{r.pattern}</td><td>{r.weight}</td>
+              <tr key={r.cls + r.rule_index}><td>{LABEL[r.cls]}</td><td className="mono">{POLICY_RULES[r.cls][r.rule_index][0]}</td><td>{r.weight}</td>
                 <td className={r.learn_cases_lost ? 'no' : ''}>{r.learn_cases_lost}</td><td className={r.stage2_bypass_added ? 'no' : ''}>+{r.stage2_bypass_added}</td><td>{r.build_stage3_bypass}</td></tr>
             ))}
           </tbody>

@@ -110,11 +110,11 @@ def ablation():
     original = guardrails._COMPILED
     try:
         for cls, rules in original.items():
-            for i, (rx, weight) in enumerate(rules):
+            for i, (_rx, weight) in enumerate(rules):
                 guardrails._COMPILED = {k: (v[:i] + v[i + 1:] if k == cls else v) for k, v in original.items()}
                 learn, fp = learn_eval()
                 s2, s3, benign = build_bypass()
-                rows.append({"cls": cls, "pattern": rx.pattern, "weight": weight,
+                rows.append({"cls": cls, "rule_index": i, "weight": weight,
                              "learn_passed": learn, "learn_benign_fp": fp,
                              "build_stage2_bypass": s2, "build_stage3_bypass": s3,
                              "build_stage2_benign_success": benign,
@@ -188,7 +188,8 @@ def main():
                       "paired_test": "exact McNemar, two-sided binomial on discordant pairs",
                       "cv_spread": "sample standard deviation (n-1) of recorded per-fold metrics",
                       "baselines_split": "same seeded held-out split as results_deep.json (20 cases)",
-                      "ablation": "leave one Learn policy rule out, rerun Learn evaluation and Build harness"},
+                      "ablation": ("leave one Learn policy rule out, rerun Learn evaluation and Build harness; "
+                                   "rule_index is the position in guardrails.POLICY_RULES[cls]")},
            "learn_ci": learn_ci, "build_ci": build_ci, "paired_mcnemar": paired,
            "held_out_ci": held_ci, "cv_sd": cv_sd, "baselines": baselines, "rule_ablation": ablation()}
     path = os.path.join(HERE, "results_rigor.json")

@@ -1,13 +1,17 @@
 // Known-answer parity check, run by `npm run build`: the JS guard must reproduce the Python guardrails exactly.
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { check, luhnOk } from './guard.js';
+import { createGuard, luhnOk } from './guard.js';
 
 const read = (p) => JSON.parse(readFileSync(new URL(`../../${p}`, import.meta.url), 'utf8'));
 const evalSet = read('level-1-learn/evaluation.json');
 const learn = read('level-1-learn/results_learn.json').results;
 const adv = read('level-2-build/adversarial.json');
 const build = read('level-2-build/results_build.json');
+const { check, POLICY_RULES, BLOCK_AT } = createGuard(readFileSync(new URL('../../level-1-learn/guardrails.py', import.meta.url), 'utf8'));
+const nRules = Object.values(POLICY_RULES).flat().length;
+assert.equal(nRules, read('level-3-deep/results_rigor.json').rule_ablation.rules.length, 'every Python rule parsed');
+assert.equal(BLOCK_AT, 2);
 
 // README hand checks.
 assert.equal(luhnOk('4111111111111111'), true);
@@ -35,4 +39,4 @@ for (const c of adv) {
   if (c.docs?.length) { assert.equal(check(c.docs.at(-1)).action, rec.actions.retrieved, `${c.id} retrieved`); surfaces++; }
   if (c.tool_output) { assert.equal(check(c.tool_output).action, rec.actions.tool, `${c.id} tool`); surfaces++; }
 }
-console.log(`guard ok: ${evalSet.length} Learn cases and ${surfaces} Build stage-2 surfaces match the Python results`);
+console.log(`guard ok: ${nRules} rules parsed from guardrails.py; ${evalSet.length} Learn cases and ${surfaces} Build stage-2 surfaces match the Python results`);

@@ -207,7 +207,7 @@
     }
   },
   "method": {
-    "ablation": "leave one Learn policy rule out, rerun Learn evaluation and Build harness",
+    "ablation": "leave one Learn policy rule out, rerun Learn evaluation and Build harness; rule_index is the position in guardrails.POLICY_RULES[cls]",
     "baselines_split": "same seeded held-out split as results_deep.json (20 cases)",
     "cv_spread": "sample standard deviation (n-1) of recorded per-fold metrics",
     "interval": "Wilson score, 95%, z=1.96",
@@ -272,7 +272,7 @@
         "learn_benign_fp": 0,
         "learn_cases_lost": 0,
         "learn_passed": 30,
-        "pattern": "ignore (all )?(previous|prior|above) instructions",
+        "rule_index": 0,
         "stage2_bypass_added": 2,
         "weight": 2
       },
@@ -284,7 +284,7 @@
         "learn_benign_fp": 0,
         "learn_cases_lost": 1,
         "learn_passed": 29,
-        "pattern": "disregard (your|all) instructions",
+        "rule_index": 1,
         "stage2_bypass_added": 0,
         "weight": 2
       },
@@ -296,7 +296,7 @@
         "learn_benign_fp": 0,
         "learn_cases_lost": 0,
         "learn_passed": 30,
-        "pattern": "reveal your system prompt",
+        "rule_index": 2,
         "stage2_bypass_added": 1,
         "weight": 2
       },
@@ -308,7 +308,7 @@
         "learn_benign_fp": 0,
         "learn_cases_lost": 0,
         "learn_passed": 30,
-        "pattern": "you are now dan\\b",
+        "rule_index": 3,
         "stage2_bypass_added": 1,
         "weight": 2
       },
@@ -320,7 +320,7 @@
         "learn_benign_fp": 0,
         "learn_cases_lost": 1,
         "learn_passed": 29,
-        "pattern": "pretend you have no rules",
+        "rule_index": 4,
         "stage2_bypass_added": 1,
         "weight": 2
       },
@@ -332,7 +332,7 @@
         "learn_benign_fp": 0,
         "learn_cases_lost": 1,
         "learn_passed": 29,
-        "pattern": "\\bbypass\\b.{0,30}\\b(safety|filters|restrictions)\\b",
+        "rule_index": 5,
         "stage2_bypass_added": 1,
         "weight": 2
       },
@@ -344,7 +344,7 @@
         "learn_benign_fp": 0,
         "learn_cases_lost": 0,
         "learn_passed": 30,
-        "pattern": "developer mode",
+        "rule_index": 6,
         "stage2_bypass_added": 0,
         "weight": 1
       },
@@ -356,7 +356,7 @@
         "learn_benign_fp": 0,
         "learn_cases_lost": 0,
         "learn_passed": 30,
-        "pattern": "no restrictions",
+        "rule_index": 7,
         "stage2_bypass_added": 0,
         "weight": 1
       },
@@ -368,7 +368,7 @@
         "learn_benign_fp": 0,
         "learn_cases_lost": 0,
         "learn_passed": 30,
-        "pattern": "without rules",
+        "rule_index": 8,
         "stage2_bypass_added": 0,
         "weight": 1
       },
@@ -380,7 +380,7 @@
         "learn_benign_fp": 0,
         "learn_cases_lost": 0,
         "learn_passed": 30,
-        "pattern": "\\bjailbreak\\b",
+        "rule_index": 9,
         "stage2_bypass_added": 0,
         "weight": 1
       },
@@ -392,7 +392,7 @@
         "learn_benign_fp": 0,
         "learn_cases_lost": 1,
         "learn_passed": 29,
-        "pattern": "\\[system\\]",
+        "rule_index": 0,
         "stage2_bypass_added": 1,
         "weight": 2
       },
@@ -404,7 +404,7 @@
         "learn_benign_fp": 0,
         "learn_cases_lost": 1,
         "learn_passed": 29,
-        "pattern": "system message\\s*:",
+        "rule_index": 1,
         "stage2_bypass_added": 1,
         "weight": 2
       },
@@ -416,7 +416,7 @@
         "learn_benign_fp": 0,
         "learn_cases_lost": 0,
         "learn_passed": 30,
-        "pattern": "retrieved (document|text|content).{0,60}(ignore|override|disregard)",
+        "rule_index": 2,
         "stage2_bypass_added": 0,
         "weight": 2
       },
@@ -428,7 +428,7 @@
         "learn_benign_fp": 0,
         "learn_cases_lost": 0,
         "learn_passed": 30,
-        "pattern": "document (says|instructs).{0,60}(ignore|reveal|print)",
+        "rule_index": 3,
         "stage2_bypass_added": 0,
         "weight": 2
       },
@@ -440,7 +440,7 @@
         "learn_benign_fp": 0,
         "learn_cases_lost": 1,
         "learn_passed": 29,
-        "pattern": "hidden instruction",
+        "rule_index": 4,
         "stage2_bypass_added": 1,
         "weight": 2
       },
@@ -452,7 +452,7 @@
         "learn_benign_fp": 0,
         "learn_cases_lost": 0,
         "learn_passed": 30,
-        "pattern": "end of document\\.?\\s*now (ignore|follow)",
+        "rule_index": 5,
         "stage2_bypass_added": 0,
         "weight": 2
       },
@@ -464,7 +464,7 @@
         "learn_benign_fp": 0,
         "learn_cases_lost": 1,
         "learn_passed": 29,
-        "pattern": "write malware",
+        "rule_index": 0,
         "stage2_bypass_added": 2,
         "weight": 2
       },
@@ -476,7 +476,7 @@
         "learn_benign_fp": 0,
         "learn_cases_lost": 1,
         "learn_passed": 29,
-        "pattern": "create ransomware",
+        "rule_index": 1,
         "stage2_bypass_added": 1,
         "weight": 2
       },
@@ -488,7 +488,7 @@
         "learn_benign_fp": 0,
         "learn_cases_lost": 1,
         "learn_passed": 29,
-        "pattern": "hack into",
+        "rule_index": 2,
         "stage2_bypass_added": 1,
         "weight": 2
       },
@@ -500,7 +500,7 @@
         "learn_benign_fp": 0,
         "learn_cases_lost": 1,
         "learn_passed": 29,
-        "pattern": "build a (weapon|bomb)",
+        "rule_index": 3,
         "stage2_bypass_added": 1,
         "weight": 2
       },
@@ -512,7 +512,7 @@
         "learn_benign_fp": 0,
         "learn_cases_lost": 0,
         "learn_passed": 30,
-        "pattern": "phishing email",
+        "rule_index": 4,
         "stage2_bypass_added": 1,
         "weight": 2
       },
@@ -524,7 +524,7 @@
         "learn_benign_fp": 0,
         "learn_cases_lost": 0,
         "learn_passed": 30,
-        "pattern": "forge a (passport|document|signature)",
+        "rule_index": 5,
         "stage2_bypass_added": 0,
         "weight": 2
       },
@@ -536,7 +536,7 @@
         "learn_benign_fp": 0,
         "learn_cases_lost": 0,
         "learn_passed": 30,
-        "pattern": "steals? passwords",
+        "rule_index": 6,
         "stage2_bypass_added": 0,
         "weight": 1
       },
@@ -548,7 +548,7 @@
         "learn_benign_fp": 0,
         "learn_cases_lost": 0,
         "learn_passed": 30,
-        "pattern": "encrypt a .{0,30} network for payment",
+        "rule_index": 7,
         "stage2_bypass_added": 0,
         "weight": 1
       }
