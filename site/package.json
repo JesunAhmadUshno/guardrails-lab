@@ -1,0 +1,13 @@
+{
+  "name": "guardrails-lab-site",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "check": "node src/guard.check.mjs && node src/classifier.check.mjs && node src/stats.check.mjs",
+    "build": "npm run check && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": { "react": "18.3.1", "react-dom": "18.3.1" },
+  "devDependencies": { "@vitejs/plugin-react": "4.3.4", "vite": "5.4.11" }
+}
