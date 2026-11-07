@@ -219,7 +219,7 @@
         "broken": 0,
         "fixed": 8,
         "n": 16,
-        "p_exact": 0.007812
+        "p_exact": 0.0078125
       },
       "misuse": {
         "broken": 0,
@@ -251,7 +251,7 @@
         "broken": 0,
         "fixed": 12,
         "n": 16,
-        "p_exact": 0.000488
+        "p_exact": 0.00048828125
       }
     }
   },

@@ -21,8 +21,8 @@ class TestRigorMath(unittest.TestCase):
         self.assertEqual(wilson(16, 16), [0.8064, 1.0])
 
     def test_mcnemar_exact(self):
-        # 12 discordant pairs all one way: 2 * 0.5^12 = 0.000488
-        self.assertEqual(mcnemar_exact(12, 0), 0.000488)
+        # 12 discordant pairs all one way: 2 * 0.5^12 = 0.000488 (unrounded)
+        self.assertAlmostEqual(mcnemar_exact(12, 0), 2 / 4096)
         self.assertEqual(mcnemar_exact(0, 0), 1.0)
         self.assertEqual(mcnemar_exact(4, 0), 0.125)
 
