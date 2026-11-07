@@ -34,3 +34,7 @@ jobs:
         run: python -m unittest tests.test_deep_classifier -v
       - name: Deep runner
         run: python level-3-deep/run_deep.py
+      - name: Rigor unit tests
+        run: python -m unittest tests.test_rigor -v
+      - name: Rigor runner (intervals, paired tests, baselines, ablation)
+        run: python level-3-deep/rigor.py
