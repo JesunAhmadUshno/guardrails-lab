@@ -37,12 +37,12 @@ measured work below.
 
 Present: v1.0 closes three levels on 2026-11-05. Learn built
 rule-based filters and PII redaction and measured them on a 30-case
-hand-labelled set (grade 7,700 of 10,000). Build ran a 58-case
+hand-labelled set. Build ran a 58-case
 adversarial set against two in-repo stand-in targets and fixed the
-top bypass class, prompt injection (grade 8,200 of 10,000).
+top bypass class, prompt injection.
 Compressed Deep trained a hand-written logistic regression misuse
 classifier on text features only and published its precision and
-recall beside the Build bypass table (grade 7,800 of 10,000).
+recall beside the Build bypass table.
 
 Future: the rest of the v2 Deep scope is named in ROADMAP.md in
 the repo as the v1.1 backlog. It includes governance artefacts (a
@@ -86,13 +86,10 @@ reuses the same scoring and redacts PII found in generated text.
 | Tests | 20 |
 | Determinism | results_learn.json identical across two runs (hash verified) |
 
-Grade: 7,700 of 10,000. Deductions are itemized in the Learn
-README: minus 700 for the synthetic same-author set, minus 600 for
-rule brittleness to paraphrase, minus 400 for narrow PII coverage,
-minus 300 for no external dataset, minus 200 because the output
-filter is the same code path as the input filter, and minus 100
-for running on the Muse VM instead of BlackBoxV2. Total
-deductions 2,300, and 10,000 minus 2,300 is 7,700.
+Limits at this level: the synthetic same-author set, rule
+brittleness to paraphrase, narrow PII coverage, no external
+dataset, an output filter that shares the input filter's code
+path, and a run on the Muse VM instead of BlackBoxV2.
 
 ### Level 2, Build (release v0.5)
 
@@ -136,13 +133,10 @@ channel, which this fix deliberately does not touch.
 
 Tests: 23 Build tests, 43 in total with Learn.
 
-Grade: 8,200 of 10,000. Deductions are itemized in the Build
-README: minus 700 for stand-in targets instead of the real P05 and
-P07 systems, minus 500 for the synthetic same-author set, minus
-300 for pattern-based brittleness, minus 200 for no model-based
-defence at this level, and minus 100 for running on the Muse VM
-instead of BlackBoxV2. Total deductions 1,800, and 10,000 minus
-1,800 is 8,200.
+Limits at this level: stand-in targets instead of the real P05
+and P07 systems, the synthetic same-author set, pattern-based
+brittleness, no model-based defence at this level, and a run on
+the Muse VM instead of BlackBoxV2.
 
 ### Level 3, Deep, compressed (release v1.0)
 
@@ -188,13 +182,10 @@ result in this level and it is named here, not averaged away.
 
 Tests: 10 Deep tests, 53 in total with Learn and Build.
 
-Grade: 7,800 of 10,000. Deductions are itemized in the Deep
-README: minus 600 for synthetic same-author data, minus 500 for
-the small held-out size (20 cases, 4 benign), minus 400 because
-the governance artefacts are not built, minus 300 for text-only
-features, minus 200 for running on the Muse VM instead of
-BlackBoxV2, and minus 200 for benign specificity 0.500 on
-held-out. Total deductions 2,200, and 10,000 minus 2,200 is 7,800.
+Limits at this level: synthetic same-author data, the small
+held-out size (20 cases, 4 benign), governance artefacts not
+built, text-only features, a run on the Muse VM instead of
+BlackBoxV2, and benign specificity 0.500 on held-out.
 
 ## Honest limits
 
@@ -230,7 +221,7 @@ held-out. Total deductions 2,200, and 10,000 minus 2,200 is 7,800.
   artefacts and the rest of the Deep scope are the named v1.1
   backlog in ROADMAP.md.
 - The runs executed on the Muse VM, not the assigned BlackBoxV2
-  node. That deduction is named in each level grade.
+  node. That limit is named in each level section of REPORT.md.
 
 ## Where to go next
 

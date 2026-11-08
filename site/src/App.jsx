@@ -5,9 +5,7 @@ import adversarial from '../../level-2-build/adversarial.json';
 import { scores, audit_log as auditLog, top_class_after_stage2 as topClass } from '../../level-2-build/results_build.json';
 import deep from '../../level-3-deep/results_deep.json';
 import rigor from '../../level-3-deep/results_rigor.json';
-import readme1 from '../../level-1-learn/README.md?raw';
-import readme2 from '../../level-2-build/README.md?raw';
-import readme3 from '../../level-3-deep/README.md?raw';
+import report from '../../REPORT.md?raw';
 import guardPy from '../../level-1-learn/guardrails.py?raw';
 import { createGuard, luhnOk } from './guard.js';
 import { fitRecorded, confusion, prf } from './classifier.js';
@@ -28,18 +26,24 @@ const { check, BLOCK_AT, POLICY_RULES } = createGuard(guardPy);
 const caseById = Object.fromEntries(adversarial.map((c) => [c.id, c]));
 const s2 = scores.stage2_guarded, s3 = scores.stage3_guarded_plus_fix;
 
-// Pull the grade, deductions, limits and determinism hash straight out of each level README.
+// Each component's write-up is one '## ... (was <level>/README.md)' section of REPORT.md; its '###' subsections
+// are lifted to '##' so the parser below reads it like the old level README.
+function reportSection(file) {
+  const s = report.split(/\n## /).find((x) => x.split('\n')[0].includes(`(was `) && x.split('\n')[0].includes(file));
+  if (!s) throw new Error(`REPORT.md has no section for ${file}`);
+  return s.replace(/\n### /g, '\n## ');
+}
+
+// Pull the limits and determinism hash straight out of each component's REPORT.md section.
 function parseReadme(md) {
   const section = (re) => { const m = md.split(/\n## /).find((s) => re.test(s.split('\n')[0])); return m ? m.split('\n').slice(1).join('\n') : ''; };
   const bullets = (txt) => txt.split(/\n- /).slice(1).map((b) => b.replace(/\n\s*/g, ' ').replace(/\n.*$/s, '').trim());
-  const gradeTxt = section(/^Grade/);
-  const grade = gradeTxt.match(/Grade: ([\d,]+) of ([\d,]+)/);
-  const ded = bullets(gradeTxt.split(/\nTotal deducted/)[0]).map((b) => { const m = b.match(/^(.*): minus ([\d,]+)\.?$/); return m ? { what: m[1], minus: m[2] } : null; }).filter(Boolean);
   const limits = bullets(section(/^Failure modes/).split(/\n\n(?!- |  )/)[0] + '\n');
   const hash = md.match(/sha256 of (\S+)\s+([0-9a-f]{64})/);
-  return { grade: grade && grade[1], of: grade && grade[2], ded, limits, hash: hash && { file: hash[1], sha: hash[2] } };
+  if (!limits.length) throw new Error('REPORT.md section has no failure modes');
+  return { limits, hash: hash && { file: hash[1], sha: hash[2] } };
 }
-const LEVELS = [['Level 1 · Learn', 'level-1-learn/README.md', parseReadme(readme1)], ['Level 2 · Build', 'level-2-build/README.md', parseReadme(readme2)], ['Level 3 · Deep', 'level-3-deep/README.md', parseReadme(readme3)]];
+const LEVELS = [['Rule guardrails', 'level-1-learn/README.md'], ['Adversarial harness', 'level-2-build/README.md'], ['Misuse classifier', 'level-3-deep/README.md']].map(([t, f]) => [t, 'REPORT.md', parseReadme(reportSection(f))]);
 
 const SECTIONS = [['top', 'Overview', '◎'], ['playground', 'Playground', '⌨'], ['bypass', 'Bypass', '▥'], ['audit', 'Audit log', '☰'], ['classifier', 'Classifier', 'ƒ'], ['cv', 'Cross-val', '⁘'], ['limits', 'Limits', '⚠'], ['reproduce', 'Reproduce', '❯_']];
 
@@ -60,9 +64,8 @@ function MenuBar() {
     <div className="menubar" role="banner">
       <span className="apple" aria-hidden="true">◆</span>
       <a className="app" href="#top">Guardrails Lab</a>
-      <a className="m" href={blob('SPEC.md')}>Spec</a>
-      <a className="m" href={blob('level-2-build/README.md')}>Red team</a>
-      <a className="m" href={blob('docs/research-review.md')}>Research review</a>
+      <a className="m" href={blob('PROPOSAL.md')}>Proposal</a>
+      <a className="m" href={blob('REPORT.md')}>Report</a>
       <span className="spacer" />
       <span className="status"><i /> Parity checked at build</span>
       <a href={REPO}>GitHub ↗</a>
@@ -126,7 +129,7 @@ export default function App() {
       <Reproduce />
       <Dock />
       <footer>
-        Code: Apache-2.0. Every number on this page is read at build time from <code>level-*/results_*.json</code> and the level READMEs. The guard playground and the classifier retrain run in your browser, and <code>npm run build</code> fails unless they reproduce the recorded Python results. All cases are synthetic and hand-built.
+        Code: Apache-2.0. Every number on this page is read at build time from <code>level-*/results_*.json</code> and REPORT.md. The guard playground and the classifier retrain run in your browser, and <code>npm run build</code> fails unless they reproduce the recorded Python results. All cases are synthetic and hand-built.
       </footer>
     </div>
   );
@@ -636,20 +639,12 @@ function CrossVal({ clf }) {
 
 function Limits() {
   return (
-    <section id="limits" className="card window reveal" data-title="LIMITS.md — failure modes and grades">
-      <p className="eyebrow">Failure modes and grades</p>
+    <section id="limits" className="card window reveal" data-title="LIMITS.md — failure modes">
+      <p className="eyebrow">Failure modes</p>
       <h2>What this lab does <em>not</em> show.</h2>
       <p className="sub">
-        Quoted from each level README at build time. The grades are self-assessed against the project&rsquo;s own rubric, with every deduction named. The <a href={blob('docs/research-review.md')}>research review</a> grades the whole repo against a PhD rubric and lists what each remaining gap would need.
+        Quoted from each component&rsquo;s section of <a href={blob('REPORT.md')}>REPORT.md</a> at build time. The repo is not pre-registered: the hypotheses there were written with the results, and <a href={blob('PROPOSAL.md')}>PROPOSAL.md</a> lists what a locked confirmatory cycle would need.
       </p>
-      <div className="grid3" style={{ marginTop: 16 }}>
-        {LEVELS.map(([t, path, lv]) => (
-          <div className="tile" key={t}>
-            <div className="head" style={{ marginBottom: 6 }}><h3><a href={blob(path)}>{t}</a></h3><span className="pill warn">{lv.grade} / {lv.of}</span></div>
-            <ul className="ded">{lv.ded.map((d) => <li key={d.what}><span>{d.what}</span><b>−{d.minus}</b></li>)}</ul>
-          </div>
-        ))}
-      </div>
       {LEVELS.map(([t, path, lv], i) => (
         <details key={t} open={i === 1} className="lim">
           <summary>{t}: {lv.limits.length} named failure modes</summary>
@@ -662,12 +657,12 @@ function Limits() {
 
 function Reproduce() {
   const docs = [
-    ['SPEC.md', 'Spec', 'Scope and acceptance criteria'],
-    ['level-1-learn/README.md', 'Learn', `Rules, PII, ${evaluation.length}-case set`],
-    ['level-2-build/README.md', 'Build', 'Stand-ins, three stages, fix'],
-    ['level-3-deep/README.md', 'Deep', 'Classifier and metrics'],
+    ['PROPOSAL.md', 'Proposal', 'Question, scope, next cycle (not locked)'],
+    ['REPORT.md', 'Report', `Hypotheses scored, ${evaluation.length}- and ${adversarial.length}-case sets, limits`],
+    ['level-1-learn/guardrails.py', 'Guardrails', 'Rules and PII redaction'],
+    ['level-2-build/harness.py', 'Harness', 'Stand-ins, three stages, fix'],
     ['level-3-deep/rigor.py', 'Rigor runner', 'Intervals, McNemar, ablation'],
-    ['docs/research-review.md', 'Research review', 'PhD-rubric grade and gaps'],
+    ['scripts/reproduce.sh', 'Reproduce', 'One command, byte-for-byte check'],
   ];
   const hashes = LEVELS.map(([, , lv]) => lv.hash).filter(Boolean);
   return (
@@ -677,7 +672,7 @@ function Reproduce() {
       <ol className="steps" style={{ marginTop: 16 }}>
         <li><span className="n">1</span><div><b>Run the three levels and the rigor pass</b><div className="hint"><code>python3 level-1-learn/run_learn.py && python3 level-2-build/run_build.py && python3 level-3-deep/run_deep.py && python3 level-3-deep/rigor.py</code></div></div></li>
         <li><span className="n">2</span><div><b>Run the tests</b><div className="hint"><code>python3 tests/test_smoke.py && python3 -m unittest discover -s tests</code></div></div></li>
-        <li><span className="n">3</span><div><b>Check determinism against the hashes the READMEs record</b><div className="hint">{hashes.map((h) => <div key={h.file}><code>{h.file} {h.sha}</code></div>)}</div></div></li>
+        <li><span className="n">3</span><div><b>Check determinism against the hashes REPORT.md records</b><div className="hint">{hashes.map((h) => <div key={h.file}><code>{h.file} {h.sha}</code></div>)}</div></div></li>
         <li><span className="n">4</span><div><b>Rebuild this page with its parity gates</b><div className="hint"><code>cd site && npm ci && npm run build</code></div></div></li>
       </ol>
       <div className="docs" style={{ marginTop: 20 }}>

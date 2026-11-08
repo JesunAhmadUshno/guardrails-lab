@@ -1,0 +1,9 @@
+cff-version: 1.2.0
+message: "If you use this work, please cite it as below."
+title: "guardrails-lab: rule guardrails, a red-team harness and a misuse classifier, measured per attack class"
+authors:
+  - family-names: Ushno
+    given-names: Jesun Ahmad
+repository-code: "https://github.com/JesunAhmadUshno/guardrails-lab"
+url: "https://jesunahmadushno.github.io/guardrails-lab/"
+license: Apache-2.0

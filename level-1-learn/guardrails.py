@@ -6,7 +6,7 @@ Defensive safety work only. Three parts:
 3. Output filter (same policy scoring plus PII leakage redaction)
    and a combined check API.
 
-Limits are stated in the level README: rules are brittle, they miss
+Limits are stated in REPORT.md (Learn section): rules are brittle, they miss
 paraphrases, and they are not a model. That brittleness is measured,
 in part, by the benign false positive rate in the evaluation.
 """
