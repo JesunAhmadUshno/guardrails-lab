@@ -24,8 +24,7 @@ is defensive safety work: the labelled cases test filters and
 targets, and all PII examples are synthetic.
 
 Status: v1.0, 2026-11-05. Learn, Build, and compressed Deep are
-done. Total tests: 53, all passing at v1.0. Level grades: Learn
-7,700 of 10,000, Build 8,200 of 10,000, Deep 7,800 of 10,000.
+done. Total tests: 53, all passing at v1.0.
 
 ## Results
 

@@ -23,8 +23,6 @@ URL: https://github.com/JesunAhmadUshno/guardrails-lab/releases/tag/v0.1
   prompt injection (5 of 5), and misuse (5 of 5).
 - Tests: 20 unit tests in tests/test_learn_guardrails.py, plus the
   scaffold smoke test.
-- Grade: 7,700 of 10,000, deductions itemized in the Learn README
-  (total deductions 2,300).
 - Limits carried in the release: rules not a model, paraphrase
   brittleness, narrow PII coverage (4 types, one phone region),
   synthetic same-author set.
@@ -49,8 +47,6 @@ URL: https://github.com/JesunAhmadUshno/guardrails-lab/releases/tag/v0.5
   stated in the release and the Build README, not a finding about
   real systems.
 - Tests: 23 Build unit tests, 43 in total with Learn.
-- Grade: 8,200 of 10,000, deductions itemized in the Build README
-  (total deductions 1,800).
 - Limits carried in the release: stand-in targets, synthetic
   same-author set, pattern-based brittleness, fix covers retrieved
   and tool text only (user-channel jailbreak stays at 0.500).
@@ -81,7 +77,5 @@ URL: https://github.com/JesunAhmadUshno/guardrails-lab/releases/tag/v1.0
   table in the Deep README. Full traces are in
   level-3-deep/results_deep.json, identical across two runs.
 - Tests: 10 Deep unit tests, 53 in total with Learn and Build.
-- Grade: 7,800 of 10,000, deductions itemized in the Deep README
-  (total deductions 2,200).
 - The rest of the v2 Deep scope is the v1.1 backlog in ROADMAP.md.
   It is not part of v1.0 and is not claimed by these notes.

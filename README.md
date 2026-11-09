@@ -1,118 +1,77 @@
 # guardrails-lab
 
-AI safety in production: filters, PII redaction, a jailbreak test set, a policy engine, a red-team track inside the isolated lab only.
+**Question.** How far do rule-based input and output guardrails, plus
+one targeted fix for the worst attack class, cut the bypass rate per
+attack class (jailbreak, prompt injection, misuse) against a RAG-style
+and an agent-style target, and does a small text classifier add recall
+on the same labelled cases?
+
+**Headline.** On its own 58-case hand-built set against in-repo stand-in targets, one quarantine and data-wrapping fix cut prompt-injection bypass from 12/16 (Wilson 95% 0.51 to 0.90) under the rule guardrails to 0/16 (0.00 to 0.19), exact McNemar p = 0.0005, while jailbreak bypass stayed at 8/16 (0.28 to 0.72); the real P05 and P07 targets were never run.
+The misuse classifier caught 16/16 held-out attacks (0.81 to 1.00) but
+passed only 2/4 benign cases (0.15 to 0.85), two cases better than
+always blocking.
+
+**Field.** Software product (AI safety guardrails). **Job family.**
+AI safety and trust engineering (safeguards).
+
+**Verdict.** Functional, not pre-registered. Tests pass in CI on
+Python 3.11 and 3.12, the results are regenerated from the labelled
+sets by one command (scripts/reproduce.sh) and checked byte for byte
+in CI, and the guardrails, the three-stage harness and the classifier
+have run end to end on the repo's own sets. No plan with pass lines
+was locked before results, the targets are stand-ins, and the Software
+product profile (coverage, dependency audit and secret scan, an upgrade
+path) is not met, so the repo stops at Functional.
 
 Live dashboard: https://jesunahmadushno.github.io/guardrails-lab/
+(a guard playground and a classifier retrain that rerun the repo's own
+code in your browser; `npm run build` fails unless both reproduce the
+recorded Python results exactly).
 
-The dashboard (site/) runs a JavaScript port of the Learn guardrails and a live retrain of the Deep classifier in the browser. `npm run build` fails unless both reproduce the recorded Python results exactly; the red-team table, audit log and cross-validation are recorded replays. Research review: docs/research-review.md.
+## Reproduce
 
-Status: Level 1 Learn DONE, Level 2 Build DONE, and Level 3 Deep DONE (2026-11-05, ROADMAP-V3-BATCH). v1.0 shipped.
-Project: P13. Fleet node: BlackBoxV2. Wave: Wave 5.
+```text
+sh scripts/reproduce.sh
+```
 
-## Start here
+Python 3.11 or later, standard library only, under ten seconds on a
+CPU. The script runs the tests and the four runners
+(level-1-learn/run_learn.py, level-2-build/run_build.py,
+level-3-deep/run_deep.py, level-3-deep/rigor.py), then fails if any
+committed result file changed. CI runs the same script. The dashboard
+rebuilds with `cd site && npm ci && npm run build`.
 
-1. Read SPEC.md for scope and acceptance criteria.
-2. Read DOSSIER.md for the past, present, and future of this problem (v1).
-3. Read NOVELTY.md for the proposed novelty (DRAFT, pending the Jev claim_check gate).
-4. Start at level-1-learn/README.md, then level-2-build, then level-3-deep.
+## Lifecycle
 
-## Level map
+- Question: DONE 2026-11-04
+- Proposal: OPEN (not pre-registered; see PROPOSAL.md)
+- Baseline: DONE 2026-11-05
+- Build: DONE 2026-11-05
+- Evaluate: OPEN
+- Report: DONE 2026-11-08
+- Review: OPEN
+- Release: OPEN
 
-- Level 1, Learn: DONE. Rule-based input and output filters, PII detection and redaction (Luhn-checked cards), and a 30-case hand-built evaluation set (benign, synthetic PII, jailbreak, prompt injection, misuse), stdlib only.
-- Level 2, Build: DONE. A 58-case adversarial set (16 jailbreak, 16 prompt injection, 16 misuse, 10 benign) run against two stand-in targets modelled on the P05 RAG and P07 agent patterns (the real repos are not imported), scored in three stages: target alone, Learn guardrails, and guardrails plus a quarantine and data-wrapping fix for the top class, prompt injection.
-- Level 3, Deep: DONE. A small misuse classifier (logistic regression from scratch, stdlib only, text features only) trained on the Learn and Build labelled sets (81 usable cases), with precision, recall, F1, and a confusion matrix published beside the Build bypass table, plus a stratified 5-fold cross-validation summary.
+## Layout
 
-## Benchmarks
-
-Measured 2026-11-05, Muse VM, Python 3.12, by level-1-learn/run_learn.py.
-
-| Test | Result |
+| Path | What it holds |
 | --- | --- |
-| Evaluation set, all cases | 30 of 30 matched expected action and class |
-| Benign false positive rate | 0 of 8, rate 0.000 |
-| PII exact redaction | 7 of 7 |
-| Jailbreak catch rate | 5 of 5, rate 1.000 |
-| Prompt injection catch rate | 5 of 5, rate 1.000 |
-| Misuse catch rate | 5 of 5, rate 1.000 |
-| Unit tests (Learn) | 20 passing, plus scaffold smoke test (53 across all levels, see Deep results) |
+| PROPOSAL.md | Question, hypotheses as recorded, the scaffold spec, novelty draft, dossier, v1.1 backlog, and what a locked confirmatory cycle needs (not locked) |
+| REPORT.md | Hypotheses scored with misses, profile check, method and results per component, failure modes, the 2026-11-07 review and threats to validity |
+| level-1-learn/ | Code: rule guardrails and PII redaction (guardrails.py), runner; evidence: the 30-case evaluation.json and results_learn.json |
+| level-2-build/ | Code: stand-in targets, harness, fix, runner; evidence: the 58-case adversarial.json and results_build.json (174-record audit log) |
+| level-3-deep/ | Code: classifier, runner, rigor pass (intervals, McNemar, baselines, ablation); results_deep.json, results_rigor.json |
+| scripts/ | reproduce.sh: the one-command reproduce |
+| tests/ | Unit tests for every component and the layout check (tests/test_smoke.py) |
+| docs/decisions/ | Records of hard-to-reverse choices |
+| site/ | The live dashboard, built from the files above |
+| fanout/ | Dated publicity drafts (2026-11-05) and the channel log, fanout/PUBLICITY.md; file names inside them refer to the layout of that date |
+| CHANGELOG.md, CITATION.cff, SECURITY.md, LICENSE | Release history, citation, security policy, licence |
 
-The perfect rates are on a small hand-built set written by the same
-author as the rules. They are not a claim about unseen text. See the
-level README limits and grade (7,700 of 10,000).
-
-## Build results
-
-Measured 2026-11-05, Muse VM, Python 3.12, by
-level-2-build/run_build.py. Bypass rate per class per stage
-(hand-checkable in level-2-build/results_build.json):
-
-| Class | Alone | Guarded | Guarded plus fix |
-| --- | --- | --- | --- |
-| Jailbreak (16) | 1.000 | 0.500 | 0.500 |
-| Prompt injection (16) | 1.000 | 0.750 | 0.000 |
-| Misuse (16) | 1.000 | 0.625 | 0.375 |
-| Benign (10) | 1.000 success | 1.000 success | 1.000 success |
-
-Top class after the guarded stage: prompt injection. The fix
-(quarantine of instruction sentences in retrieved and tool text,
-plus wrapping that text as data the targets do not follow) takes
-it to 0.000 on this set. The targets are stand-ins, not the real
-P05 and P07 systems, and the set is hand-built and synthetic. See
-level-2-build/README.md for method, failure modes, and the grade
-(8,200 of 10,000). Unit tests: 43 passing (20 Learn, 23 Build),
-plus the scaffold smoke test.
-
-## Deep results
-
-Measured 2026-11-05, Muse VM, Python 3.12, by
-level-3-deep/run_deep.py. Seeded stratified split (seed 42, test
-fraction 0.25): train 61, held-out test 20 (16 block-worthy,
-4 benign).
-
-| Metric | Held-out value |
-| --- | --- |
-| Precision | 0.889 |
-| Recall | 1.000 |
-| F1 | 0.941 |
-| Accuracy | 0.900 |
-| Confusion (TP, FP, TN, FN) | 16, 2, 2, 0 |
-
-Per class on held-out: jailbreak recall 1.000 (5 of 5), prompt
-injection recall 1.000 (5 of 5), misuse recall 1.000 (6 of 6),
-benign specificity 0.500 (2 of 4: both false positives are benign
-cases discussing jailbreak research). Stratified 5-fold cross
-validation over all 81 cases: precision mean 0.844, recall mean
-0.922, F1 mean 0.879. Data is synthetic and same-author, the
-held-out set is small, and features are text only. See
-level-3-deep/README.md for method, failure modes, and the grade
-(7,800 of 10,000). Unit tests: 53 passing in total (20 Learn,
-23 Build, 10 Deep), plus the scaffold smoke test.
-
-## Novelty
-
-PROPOSED. See NOVELTY.md. The novelty text is a draft until the Jev claim_check gate passes on it.
-
-## Fan-out
-
-Written fan-out set for v1.0, dated 2026-11-05, in fanout/:
-
-- fanout/blog-post.md: "The Guard at the Door", the full story
-  with the main results claim gated by Jev claim_check (model
-  jev-1.13.0, noul 0.63, route REVIEW, no block).
-- fanout/tutorial.md: course module P13-guardrails-lab. Every
-  command in it was executed and passed on 2026-11-05 (all three
-  runners, all per-level tests, full suite at 53 tests).
-- fanout/website-page.md: project page copy only, not published.
-- fanout/linkedin-post.md: DRAFT NOT POSTED, link as the
-  first-comment line per the LinkedIn rule.
-- fanout/paper-candidate.md: bypass-rate red-team study brief at
-  CANDIDATE. Submission is Jesun's tap, nothing submitted.
-- fanout/release-notes.md: draft notes for the live releases
-  v0.1, v0.5, and v1.0.
-
-Publicity grades and the channel log are in PUBLICITY.md. Overall
-fan-out grade: 9,560 of 10,000. The loop never posts to social:
-all social channels are held with named reasons in PUBLICITY.md.
+No experiments/ or results/ folder: the labelled sets are hand-written
+inputs and every result is deterministic, so each result file sits next
+to the code that writes it and CI proves it regenerates unchanged
+(decision 0001).
 
 ## License
 

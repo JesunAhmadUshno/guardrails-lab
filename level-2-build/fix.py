@@ -26,7 +26,7 @@ Mechanism, two parts, both real:
 Limits: sentence splitting is naive (a period ends a sentence),
 the imperative list is finite, and a real system would need this
 at the prompt construction layer, not as a text post-process.
-Those limits are named in the level README grade.
+Those limits are named in REPORT.md (Build section).
 """
 import re
 

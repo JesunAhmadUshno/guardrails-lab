@@ -1,12 +1,12 @@
 name: Pages
 
-# Builds the live dashboard in site/ from the committed level-*/results_*.json files and level READMEs,
+# Builds the live dashboard in site/ from the committed level-*/results_*.json files and REPORT.md,
 # runs the build-time parity checks, and publishes it to GitHub Pages at /guardrails-lab/.
 # Pages must use build_type "workflow" for this to replace the older docs/ Jekyll page.
 on:
   push:
     branches: [main]
-    paths: ['site/**', 'level-*/**/*.json', 'level-*/README.md', '.github/workflows/pages.yml']
+    paths: ['site/**', 'level-*/**', 'REPORT.md', '.github/workflows/pages.yml']
   workflow_dispatch:
 
 permissions:
